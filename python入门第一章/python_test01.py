@@ -34,12 +34,3 @@
 #             continue
 #         elif a == "N" or "n":
 #             break
-
-names = [1, 2, 3, 4, 5, 6]
-n = int(input("请输入数字："))
-a = print(n in names)
-print(a)
-if print(n in names) == True:
-    print("成功")
-else:
-    print("失败")
