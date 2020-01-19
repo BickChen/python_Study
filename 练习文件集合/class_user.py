@@ -13,13 +13,40 @@ class User():
     def reset_login_attempts(self):
         self.login_attempts = 0
 
-name = User('lisi', 'girl')
-print(name.login_attempts)
-name.increment_login_attempts()
-name.increment_login_attempts()
-print(name.login_attempts)
-name.reset_login_attempts()
-print(name.login_attempts)
+class Admin(User):
+    def __init__(self, name, gender):
+        super().__init__(name, gender)
+        self.admin = Privileges()
+    def show_privileges(self):
+        if self.name == "Admin":
+            print("Administrator rights: ")
+            print(self.admin.privileges[0])
+            print(self.admin.privileges[1])
+            print(self.admin.privileges[2])
+        else:
+            print("User access: ")
+            print(self.admin.privileges[0])
+
+
+class Privileges():
+    def __init__(self):
+        self.privileges = ['can add post', 'can delete post', 'can ban user']
+
+
+admin_user = Admin('dmin','man')
+print(admin_user.show_privileges())
+
+# admin_user = Admin('dmin','man')
+# print(admin_user.show_privileges())
+
+
+# name = Useradd('lisi', 'girl')
+# print(name.login_attempts)
+# name.increment_login_attempts()
+# name.increment_login_attempts()
+# print(name.login_attempts)
+# name.reset_login_attempts()
+# print(name.login_attempts)
 # tom_name = User('tom','man')
 # jay_name = User('jay','girl')
 # print(tom_name.describe_user())
