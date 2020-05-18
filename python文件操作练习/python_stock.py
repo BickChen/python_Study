@@ -9,7 +9,6 @@ while True:
         line = line.strip().split(',')
         dic = dict(zip(keys, line))
 #        print(dic)
-#        print(dic)
         if '>' in user_input:
             q_name, q_val = user_input.split('>')
             if q_val.isdigit() and q_name in screen:
