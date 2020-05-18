@@ -1,5 +1,5 @@
 file_name = 'stock_data'
-screen = ["最新价", "涨跌幅", "换手率"]
+screen = ["最新价", "涨跌幅", "市盈率", "换手率"]
 f = open(file_name, 'r', encoding="UTF-8")
 keys = f.readline().strip().split(',')
 number = 0
@@ -8,12 +8,16 @@ while True:
     for line in f:
         line = line.strip().split(',')
         dic = dict(zip(keys, line))
-        print(dic)
+#        print(dic)
 #        print(dic)
         if '>' in user_input:
             q_name, q_val = user_input.split('>')
             if q_val.isdigit() and q_name in screen:
                 q_val = int(q_val)
+                if '-' in dic[q_name]:
+                    continue
+                elif '%' in dic[q_name]:
+                    dic[q_name], i = dic[q_name][:-1].split('.')
                 condition = dic[q_name]
                 condition = int(float(condition))
                 if condition > q_val:
@@ -23,9 +27,13 @@ while True:
                 print('您输入的筛选条件不支持！')
                 break
         elif '<' in user_input:
-            q_name, q_val = user_input.split('>')
+            q_name, q_val = user_input.split('<')
             if q_val.isdigit() and q_name in screen:
                 q_val = int(q_val)
+                if '-' in dic[q_name]:
+                    continue
+                elif '%' in dic[q_name]:
+                    dic[q_name], i = dic[q_name][:-1].split('.')
                 condition = dic[q_name]
                 condition = int(float(condition))
                 if int(dic[q_name]) < q_val:
