@@ -45,6 +45,12 @@ def save_back_file(format_list,dic,username):
         print("输入的不是一个正确的索引")
 
 def change_personal_info(format_list,dic,username):
+    """
+    传入读取的文件数据表格索引列表 format_list
+    传入读取的文件数据生成的字典 dic
+    传入需要修改用户数据的用户名 username
+    修改用户数据字典dic 相应的值，然后通过join方法将列表转换为字符串重写文件
+    """
     new_passwd = input("New Passwork：")
     dic[username][1] = new_passwd
     file = open(file_name, 'w', encoding='utf-8')
