@@ -154,7 +154,7 @@ def main():
             delay = 60
         delay -= 1
 
-        # 获得用户所有的键盘输入序列(如果用户通过键盘发出“向上”的指令,其他类似)
+        # 获得用户所有的键盘输入序列(如果用户通过键盘发出"向上"的指令,其他类似)
         key_pressed = pygame.key.get_pressed()
         if key_pressed[K_w] or key_pressed[K_UP]:
             our_plane.move_up()

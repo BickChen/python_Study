@@ -51,21 +51,21 @@
 # #计算列表长度并输出
 # print(len(li))
 #
-# #列表中追加元素“seven”，并输出添加后的列表
+# #列表中追加元素"seven"，并输出添加后的列表
 # li.append("seven")
 # print(li)
 #
-# #请在列表的第1个位置插入元素“Tony”，并输出添加后的列表
+# #请在列表的第1个位置插入元素"Tony"，并输出添加后的列表
 #
 # li.insert(0, "Tony")
 # print(li)
 #
-# #请修改列表第2个位置的元素为“Kelly”，并输出修改后的列表
+# #请修改列表第2个位置的元素为"Kelly"，并输出修改后的列表
 #
 # li.insert(1, "Kelly")
 # print(li)
 #
-# #请删除列表中的元素“eric”，并输出修改后的列表
+# #请删除列表中的元素"eric"，并输出修改后的列表
 #
 # li.remove("eric")
 # print(li)
@@ -115,11 +115,11 @@
 
 # li = ["hello", 'seven', ["mon", ["h", "kelly"], 'all'], 123, 446]
 #
-# #请根据索引输出“Kelly”
+# #请根据索引输出"Kelly"
 #
 # print(li[2][1][1])
 #
-# #请使用索引找到"all"元素并将其修改为“ALL”，如：li[0][1][9]…
+# #请使用索引找到"all"元素并将其修改为"ALL"，如：li[0][1][9]…
 # print(li[2][2])
 # li[2][2] = 'ALL'
 # print(li[2][2])
@@ -141,11 +141,11 @@
 
 """
 6、转换
-将字符串s = “alex”转换成列表
-将字符串s = “alex”转换成元祖
-将列表li = [“alex”, “seven”]转换成元组
-将元组tu = ("Alex", “seven”)转换成列表
-将列表li = [“alex”, “seven”]转换成字典且字典的key按照10开始向后递增
+将字符串s = "alex"转换成列表
+将字符串s = "alex"转换成元祖
+将列表li = ["alex", "seven"]转换成元组
+将元组tu = ("Alex", "seven")转换成列表
+将列表li = ["alex", "seven"]转换成字典且字典的key按照10开始向后递增
 """
 
 # s = "alex"

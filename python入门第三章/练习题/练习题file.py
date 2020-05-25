@@ -36,7 +36,7 @@
 
 # print(list(filter(lambda x: x['shares'] > 100, portfolio)))
 
-#有列表 li = ["alex", "egon", "smith", "pizza", "alen"], 请将以字母“a”开头的元素的首字母改为大写字母；
+#有列表 li = ["alex", "egon", "smith", "pizza", "alen"], 请将以字母"a"开头的元素的首字母改为大写字母；
 #
 # li = ["alex", "egon", "smith", "pizza", "alen"]
 # li = list(map(lambda x: x.capitalize(), li))
@@ -67,7 +67,7 @@
 # os.replace('poetry.new', 'poetry')
 
 """
-有名为username.txt的文件，其内容格式如下，写一个程序，判断该文件中是否存在”alex”, 如果没有，则将字符串”alex”添加到该文件末尾，否则提示用户该用户已存在；
+有名为username.txt的文件，其内容格式如下，写一个程序，判断该文件中是否存在"alex", 如果没有，则将字符串"alex"添加到该文件末尾，否则提示用户该用户已存在；
 """
 
 # file = open('username', 'a+', encoding='utf-8')

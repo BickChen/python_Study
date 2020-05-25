@@ -1,0 +1,34 @@
+python模块的分类：
+标准模块：（又称标准库）执行help(‘modules’)查看所有python自带模块列表
+第三方模块：第三方开源模块，可通过pip install 模块名 联网安装
+自定义模块：自己开发的模块
+
+导入方式有4种：
+import os              //导入os模块，在调用的时候需要加os.前缀，可以导入多个模块
+                         import os,sys
+
+form os import read     //导入os模块中的read方法，调用时不用加os.前缀，
+                          但只能使用os模块中的read方法，如果需要导入os模块多个方法
+                          可以用,号隔开各个方法 form os import read,name。
+
+form modele.xxx.xxx import xxx as rename
+//导入modele模块包里的xxx模块中的xxx方法，并将xxx方法重命名为rename
+
+from os import *  //导入os模块所有方法，不推荐使用此方法，此方法可能会导致你程序中的方法调用冲突
+
+python模块存放路径：
+python3.7/lib \\python标准库路径
+python3.7/lib/site-packages \\python第三方模块安装路径
+
+pip命令默认会连接在国外的python官方服务器下载，速度比较慢，你还可以使用国内的豆瓣源，数据会定期同步国外官网，速度快好多
+
+pip install -i http://pypi.douban.com/simple/ alex_sayhi --trusted-host pypi.douban.com
+\\ -i参数后加入pip源的地址 alex_sayhi是模块名 --trusted-host pypi.douban.com参数是因为豆瓣不是官方的pip源，pip会报错不是信任的pip源
+
+
+我们写程序时对时间的处理可以归为以下3种：
+
+1、时间的显示，在屏幕显示、记录日志等
+2、时间的转换，比如把字符串格式的日期转成Python中的日期类型
+3、时间的运算，计算两个日期间的差值等
+
