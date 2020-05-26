@@ -7,20 +7,15 @@
 登陆成功后，打印“登陆成功”，三次登陆失败，status值改为1，并且锁定账号。
 """
 
-import json, os, time
+import json, time, modular_mod
 
 # 生成用户数据文件
 # name_data = {"expire_date": "2021-01-01", "id": 1234, "status": 0, "pay_day": 22, "password": "abc"}
 # file = open('user_data/Yasin', 'w')
 # json.dump(name_data, file)
-user_data = {}
-user_catalog = os.listdir("./user_data")
-# print(user_catalog)
-# print(os.path.abspath("./user_data"))
-for i in user_catalog:
-    user_data[i] = (os.path.join(os.path.abspath("./user_data"), i))
-print(user_data)
 
+
+user_data = modular_mod.file_info('payment/user_data')
 frequency = 1
 while True:
 
@@ -32,9 +27,6 @@ while True:
         user_info = json.load(file)
         file.close()
         if user_info['status'] == 0:
-            # print(user_info)
-            # print(time.time())
-            # print(time.mktime(time.strptime(user_info['expire_date'], "%Y-%m-%d")))
             if time.time() < time.mktime(time.strptime(user_info['expire_date'], "%Y-%m-%d")):
                 if user_passwd == user_info['password']:
                     print('登陆成功')
