@@ -1,0 +1,79 @@
+类变量是在编写类是我们在类中定义好的变量，它存在类中，在类生成实例的时候会将类变量拷贝一份生成实例变量。
+实例的方法只能访问实例变量，因为实例名通过self传递到了实例内部。
+但是实例方法无法访问或更改生成实例的类的变量，类生成实例后内存地址会发生变化。
+
+类方法通过@classmethod装饰器实现，类方法和普通方法的区别是， 类方法只能访问类变量，不能访问实例变量。
+
+通过@staticmethod装饰器即可把其装饰的方法变为一个静态方法，什么是静态方法呢？其实不难理解，
+普通的方法，可以在实例化后直接调用，并且在方法里可以通过self.调用实例变量或类变量，
+但静态方法是不可以访问实例变量或类变量的，一个不能访问实例变量和类变量的方法，
+其实相当于跟类本身已经没什么关系了，它与类唯一的关联就是需要通过类名来调用这个方法
+变成静态方法后，再通过实例调用时就不会自动把实例本身当作一个参数传给self了。
+相当于在类中编写了一个和类毫无关系的函数方法。
+
+属性方法的作用就是通过@property把一个方法变成一个静态属性
+静态属性解决的问题是将一个函数封装成变量的形式，这个函数不能被传递参数，
+调用的时候经过函数内部定义的一系列操作来返回数据，像是调用一个自定义的脚本。
+比如 ，你想知道一个航班当前的状态，是到达了、延迟了、取消了、还是已经飞走了， 想知道这种状态你必须经历以下几步:
+1. 连接航空公司API查询
+2. 对查询结果进行解析
+3. 返回结果给你的用户
+因此这个status属性的值是一系列动作后才得到的结果，所以你每次调用时，其实它都要经过一系列的动作才返回你结果，
+但这些动作过程不需要用户关心， 用户只需要调用这个属性就可以。
+
+python面向对象中的反射或称作（映射，自省）：通过字符串的形式操作对象相关的属性。python中的一切事物都是对象（都可以使用反射）
+
+hasattr(obj,'name')检测是否含有某属性:print(hasattr(obj,'name'))
+检测obj中是否有名为name的属性或方法，如果有返回True,没有返回False.
+
+n = getattr(obj,'name')获取对象的属性或方法，获取属性是直接把obj中的name变量的值赋给n，后面n更新值并不会同步到obj中。
+
+setattr(obj, 'hobbie', 'girl')增加对象的属性或方法，在obj中增加一个名为hobbie的属性，值为girl。
+注意：使用setattr增加对象方法的时候，直接增加到实例对象调用时候如果需要使用实例属性需将实例传给增加的方法。例如：
+class Flight(object):
+    def __init__(self,name):
+        self.name = name
+
+    def filght_status(self,age):
+        print("name : a",self.name,age)
+
+def name(self):
+    print(self.name)
+
+f = Flight("Alex")
+setattr(f, 'n', name)
+f.n(f)
+如果使用setattr增加对象方法时，直接对类操作则无需传递实例值，后面使用此类实例化的对象皆可正常调用此方法。
+class Flight(object):
+    def __init__(self,name):
+        self.name = name
+
+    def filght_status(self,age):
+        print("name : a",self.name,age)
+
+def name(self):
+    print(self.name)
+
+f = Flight("Alex")
+setattr(Flight, 'n', name)
+f.n()
+
+delattr(obj,'age')删除属性,与del obj.age效果一样。
+
+适用于类和对象（一切皆对象，类本身也是一个对象）
+python中__name__就代表模块本身，如果是本模块自己运行__name__会等于字符串__main__
+如果是其他模块调用__name__等于模块名
+import sys
+this_module = sys.modules[__name__]
+sys.modulesk可以动态获取到本模块
+
+动态获取包里的模块
+import importlib     #importlib代表导入的包名
+__import__('import_lib.metaclass') #这是解释器自己内部用的
+importlib.import_module('import_lib.metaclass') #与上面这句效果一样，官方建议用这个
+以上的含义是，获取import_lib包中metaclass模块的地址
+
+str函数或者print函数调用时--->obj.__str__()
+repr或者交互式解释器中调用时--->obj.__repr__()
+如果__str__没有被定义,那么就会使用__repr__来代替输出
+注意:这俩方法的返回值必须是字符串,否则抛出异常
