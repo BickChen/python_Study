@@ -8,6 +8,3 @@
 # password = '1554698cdf30a005f0b69228c54f3155'
 # if conf.get('Yasin','password') == password:
 #     print("成功")
-
-a = '%s'%'\\'
-print(a)
