@@ -4,11 +4,12 @@ import json
 from configparser import ConfigParser
 import os
 import subprocess
+from pathlib import Path
 
 class FtpServer(object):
     socket_region = socket.AF_INET
     socket_agree = socket.SOCK_STREAM
-    host_post = ('127.0.0.1', 8080)
+    host_post = ('0.0.0.0', 8080)
     pending_num = 5
     receive_bytes = 1024
     header_bytes = 4
@@ -21,6 +22,7 @@ class FtpServer(object):
         self.socker = socket.socket(self.socket_region,self.socket_agree)
         self.socker.bind(self.host_post)
         self.socker.listen(self.pending_num)
+
 
     def connection(self):
         while True:
@@ -52,18 +54,18 @@ class FtpServer(object):
 
     def user_auth(self):
         self.__header_receive()
-        username = self.head_dic['username']
+        self.username = self.head_dic['username']
         password = self.head_dic['password']
         # print(username, password)
         conf = ConfigParser()
         conf.read(self.user_date_file.encode(self.coding))
         # print(conf.has_section(username))
         # print(conf.get(username, 'password'))
-        if conf.has_section(username) and conf.get(username,'password') == password:
+        if conf.has_section(self.username) and conf.get(self.username,'password') == password:
             print("登陆成功！")
             self.user_status = True
-            self.user_home = conf.get(username, 'home')
-            self.user_quota = conf.get(username, 'user_quota')
+            self.user_home = conf.get(self.username, 'home')
+            self.user_quota = conf.get(self.username, 'user_quota')
             # print(self.user_status)
             self.conn.send('1'.encode(self.coding))
             print("发送成功")
@@ -72,8 +74,11 @@ class FtpServer(object):
 
     def user_command(self):
         self.cilent_cmd = self.conn.recv(self.receive_bytes).decode(self.coding).split()
+        print(self.cilent_cmd[0])
+        print(self, self.cilent_cmd[0])
         if hasattr(self, self.cilent_cmd[0]):
             getattr(self, self.cilent_cmd[0])()
+            print('执行完毕')
 
     def get(self):
         file_name = self.user_home + self.cilent_cmd[1]
@@ -101,19 +106,74 @@ class FtpServer(object):
                 total += len(recv_date)
             print('传输完成，共传输：%d 字节'%total)
 
-
+    def __res(self, cmd):
+        res = subprocess.Popen(cmd, shell=True,
+                               stdout=subprocess.PIPE,
+                               stdin=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        return res
 
     def ls(self):
-        pass
+        folder = self.user_home + self.cilent_cmd[1]
+        print(folder)
+        cmd = "%s %s"%('dir', folder)
+        res = self.__res(cmd)
+        stderr = res.stderr.read()
+        stdout = res.stdout.read()
+        print(stdout)
+        print(stderr)
+        print("res length",len(stdout + stderr))
+        self.user_date = {'file_size': len(stdout + stderr)}
+        self.__header_send()
+        self.conn.send(stderr)
+        self.conn.send(stdout)
 
     def mkdir(self):
-        pass
+        folder = self.user_home + self.cilent_cmd[1]
+        print(folder)
+        cmd = "%s %s"%(self.cilent_cmd[0],folder)
+        res = self.__res(cmd)
+        stderr = res.stderr.read()
+        print(stderr)
+        if stderr:
+            print("res length",len(stderr))
+            self.conn.send(stderr)
+        else:
+            self.conn.send('创建成功'.encode(self.coding))
 
     def cd(self):
-        pass
+        if self.cilent_cmd[1] == '\\':
+            conf = ConfigParser()
+            conf.read(self.user_date_file.encode(self.coding))
+            self.user_home = conf.get(self.username, 'home')
+        else:
+            self.user_home += self.cilent_cmd[1] + '\\'
 
     def remove(self):
-        pass
+        folder = self.user_home + self.cilent_cmd[1]
+        my_file = Path(folder)
+        if my_file.is_dir():
+            print(folder)
+            cmd = "%s %s"%('rd /s/q', folder)
+            res = self.__res(cmd)
+            stderr = res.stderr.read()
+            if stderr:
+                print("res length", len(stderr))
+                self.conn.send(stderr)
+            else:
+                self.conn.send("删除成功！".encode(self.coding))
+        elif my_file.exists():
+            print(folder)
+            cmd = "%s %s"%('del', folder)
+            res = self.__res(cmd)
+            stderr = res.stderr.read()
+            if stderr:
+                print("res length", len(stderr))
+                self.conn.send(stderr)
+            else:
+                self.conn.send("删除成功！".encode(self.coding))
+        else:
+            self.conn.send("文件或文件夹不存在！".encode(self.coding))
 
 
 FtpServer().connection()

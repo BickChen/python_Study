@@ -3,12 +3,14 @@ import struct
 import hashlib
 import json
 import os
+import chardet
 
 class FtpClient(object):
     socket_region = socket.AF_INET
     socket_agree = socket.SOCK_STREAM
     host_post = ('127.0.0.1', 8080)
     coding = 'utf-8'
+    coding_gbk = 'gbk'
     header_bytes = 4
     receive_bytes = 1024
     user_status = 0
@@ -73,12 +75,20 @@ class FtpClient(object):
             try:
                 user_input = input('>>>:')
                 if not user_input: continue
-                self.socket.send(user_input.encode('utf-8'))
                 self.cmds = user_input.split()
-                if hasattr(self, self.cmds[0]):
+                if len(self.cmds) != 2:
+                    print("输入的命令必须有两个参数！")
+                    continue
+                self.socket.send(user_input.encode('utf-8'))
+                if self.cmds[0] == 'cd':
+                    continue
+                elif self.cmds[0] == 'remove':
+                    self.mkdir()
+                elif hasattr(self, self.cmds[0]):
                     getattr(self, self.cmds[0])()
                 else:
-                    print('请重新输入')
+                    print('没有此命令，请重新输入！')
+                    continue
             except Exception as e:  # server关闭了
                 print(e)
                 break
@@ -110,7 +120,22 @@ class FtpClient(object):
                 self.socket.send(line)
             file.close()
 
+    def ls(self):
+        self.__header_receive()
+        num = self.head_dic['file_size']
+        total = 0
+        recv_data = b""
+        while total < num:
+            recv_data += self.socket.recv(self.receive_bytes)
+            total = len(recv_data)
+        print(recv_data.decode(self.coding_gbk))
 
+    def mkdir(self):
+        date = self.socket.recv(self.receive_bytes)
+        if chardet.detect(date)["encoding"] == 'gbk':
+            print(date.decode(self.coding_gbk))
+        else:
+            print(date.decode(self.coding))
 
 
 FtpClient().run()
