@@ -151,7 +151,12 @@ class FtpServer():
             conf.read(self.user_date_file.encode(self.coding))
             self.user_home = conf.get(self.username, 'home')
         else:
-            self.user_home += self.cilent_cmd[1] + '\\'
+            route = self.user_home + self.cilent_cmd[1]
+            my_file = Path(route)
+            if my_file.is_dir():
+                self.user_home = route + '\\'
+            else:
+                pass
 
     def remove(self):
         folder = self.user_home + self.cilent_cmd[1]
