@@ -4,6 +4,7 @@ from django.db import models
 
 
 class Account(models.Model):
+    """用户表"""
     username = models.CharField(max_length=64, unique=True)
     email = models.EmailField()
     password = models.CharField(max_length=128)
