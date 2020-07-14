@@ -4,9 +4,9 @@ class LOLMatchData(object):
 
     def __init__(self):
         self.endpoint = 'http://oss-cn-shanghai.aliyuncs.com/'
-        self.auth = oss2.Auth('LTAI4G7sKG8pdYAXkSo9ANrd', '8FeSeD6nyadeMkQ5jywhrMUm5BkQ4O')
-        self.bucket = oss2.Bucket(self.auth, self.endpoint, 'lolmatchimg')
-        self.client = pymongo.MongoClient('mongodb://root:F2V2InNkKifsePJg@101.133.144.63:27017/')
+        self.auth = oss2.Auth('xxxxx', 'xxxxx')
+        self.bucket = oss2.Bucket(self.auth, self.endpoint, 'xxxxx')
+        self.client = pymongo.MongoClient('xxxxx')
         # self.tournament_list = 'https://data.pentaq.com/business_api/2018mar/tournament_list'
         # self.tournament_situation = 'https://data.pentaq.com/business_api/2018mar/tournament_situation'
         # self.tournament_most_ban = 'https://data.pentaq.com/business_api/2018mar/tournament_most_ban'
