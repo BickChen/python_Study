@@ -1,8 +1,10 @@
-import pymysql, datetime, xlwt
+import pymysql, datetime, xlwt, oss2
 
 """
+python 3.7
 pip install pymysql
 pip install xlwt
+pip install oss2
 pip install cryptography
 解决：RuntimeError: cryptography is required for sha256_password or caching_sha2_password
 """
@@ -15,11 +17,12 @@ def get_data(cur, sql):
         with open(current_time + 'sql.log', 'w') as log_file:
             log_file.write(e)
 
-def excel_save(*args, file_name, sql_data):
+
+def excel_save(field_list, file_name, sql_data):
     wb = xlwt.Workbook()
     sheet = wb.add_sheet('Sheet1')
-    for i in range(0, len(args)):
-        sheet.write(0, i, args[i])
+    for i in range(0, len(field_list)):
+        sheet.write(0, i, field_list[i])
     start_row_num = 1
     for data in sql_data:
         start_col_num = 0
@@ -28,22 +31,39 @@ def excel_save(*args, file_name, sql_data):
             start_col_num +=1
         start_row_num +=1
     wb.save(file_name + str(thismonthtoday) + '.xls')
+    oss_file_path = 'data/' + file_name + str(thismonthtoday) + '.xls'
+    local_file_path = './' + file_name + str(thismonthtoday) + '.xls'
+    with open(local_file_path, 'rb') as file_data:
+        bucket.put_object(oss_file_path, file_data)
+
+
+def run(file_dic):
+    for file_id in file_dic:
+        cur = db.cursor()
+        sql = file_dic[file_id][2]
+        print(sql)
+        data = get_data(cur, sql)
+        print(data)
+        excel_save(file_name=file_dic[file_id][0], field_list=file_dic[file_id][1], sql_data=data)
 
 
 if __name__ in '__main__':
     db = pymysql.connect('xxx', 'xxx', 'xxx', 'xxx', charset='utf8')
     thismonthtoday = datetime.date.today() + datetime.timedelta(days= -1)
     current_time = "'%s'"%(thismonthtoday)
-    total_sql = """SELECT a.team_id, t.team_name , COUNT(*) as count FROM self_event_team_call_log a LEFT JOIN self_event_teams t ON a.team_id = t.id GROUP BY a.team_id ORDER BY count desc;"""
-    cur_01 = db.cursor()
-    total_data = get_data(cur_01, total_sql)
-    excel_save('team_id', 'team_name', 'votes_num', file_name='total_surface', sql_data=total_data)
-    print(total_sql)
-    current_sql = """SELECT a.team_id, t.team_name , COUNT(*), %s FROM self_event_team_call_log a LEFT JOIN self_event_teams t ON a.team_id = t.id WHERE left(a.update_time, 10)=%s GROUP BY a.team_id;"""%(current_time, current_time)
-    cur_02 = db.cursor()
-    current_data = get_data(cur_02, current_sql)
-    excel_save('team_id', 'team_name', 'votes_num', 'time', file_name='current_surface', sql_data=current_data)
-    print(current_sql)
+
+    total_sql = """SELECT a.accountid, t.nickname, t.phone, COUNT(*) AS count FROM self_event_team_call_log a LEFT JOIN users t ON a.accountid = t.accountid GROUP BY a.accountid ORDER BY count DESC;"""
+    current_sql = """SELECT a.accountid, t.nickname, t.phone, COUNT(*) AS count, %s FROM self_event_team_call_log a LEFT JOIN users t ON a.accountid = t.accountid WHERE LEFT (a.update_time, 10) = %s GROUP BY a.accountid ORDER BY count DESC;"""%(current_time, current_time)
+
+    file_dic = {1: ['total_surface', ['user_id', 'user_name', 'user_phone', 'count'], total_sql],
+                2: ['current_surface', ['user_id', 'user_name', 'user_phone', 'count', 'time'], current_sql]
+                }
+
+    endpoint = 'oss-cn-beijing.aliyuncs.com'
+    auth = oss2.Auth('LTAI4G4nTRjHuVxkcyPGnmNb', 'sWrf8jti6gUcoqfowOYuDh2IiczqdW')
+    bucket = oss2.Bucket(auth, endpoint, 'matchvotesnum')
+
+    run(file_dic)
     db.close()
 
 
