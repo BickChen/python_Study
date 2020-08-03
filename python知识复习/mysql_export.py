@@ -31,7 +31,7 @@ def excel_save(*args, file_name, sql_data):
 
 
 if __name__ in '__main__':
-    db = pymysql.connect('101.133.152.236', 'admin', 'W!71E55h1sXXGX0e', 'strong', charset='utf8')
+    db = pymysql.connect('xxx', 'xxx', 'xxx', 'xxx', charset='utf8')
     thismonthtoday = datetime.date.today() + datetime.timedelta(days= -1)
     current_time = "'%s'"%(thismonthtoday)
     total_sql = """SELECT a.team_id, t.team_name , COUNT(*) as count FROM self_event_team_call_log a LEFT JOIN self_event_teams t ON a.team_id = t.id GROUP BY a.team_id ORDER BY count desc;"""
