@@ -31,19 +31,19 @@ def excel_save(*args, file_name, sql_data):
 
 
 if __name__ in '__main__':
-    db = pymysql.connect('xxx', 'xxx', 'xxx', 'xxx', charset='utf8')
-    thismonthtoday = datetime.date.today()
+    db = pymysql.connect('101.133.152.236', 'admin', 'W!71E55h1sXXGX0e', 'strong', charset='utf8')
+    thismonthtoday = datetime.date.today() + datetime.timedelta(days= -1)
     current_time = "'%s'"%(thismonthtoday)
     total_sql = """SELECT a.team_id, t.team_name , COUNT(*) as count FROM self_event_team_call_log a LEFT JOIN self_event_teams t ON a.team_id = t.id GROUP BY a.team_id ORDER BY count desc;"""
     cur_01 = db.cursor()
     total_data = get_data(cur_01, total_sql)
     excel_save('team_id', 'team_name', 'votes_num', file_name='total_surface', sql_data=total_data)
-    print(total_data)
+    print(total_sql)
     current_sql = """SELECT a.team_id, t.team_name , COUNT(*), %s FROM self_event_team_call_log a LEFT JOIN self_event_teams t ON a.team_id = t.id WHERE left(a.update_time, 10)=%s GROUP BY a.team_id;"""%(current_time, current_time)
     cur_02 = db.cursor()
     current_data = get_data(cur_02, current_sql)
     excel_save('team_id', 'team_name', 'votes_num', 'time', file_name='current_surface', sql_data=current_data)
-    print(current_data)
+    print(current_sql)
     db.close()
 
 
