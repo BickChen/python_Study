@@ -60,8 +60,8 @@ if __name__ in '__main__':
                 }
 
     endpoint = 'oss-cn-beijing.aliyuncs.com'
-    auth = oss2.Auth('LTAI4G4nTRjHuVxkcyPGnmNb', 'sWrf8jti6gUcoqfowOYuDh2IiczqdW')
-    bucket = oss2.Bucket(auth, endpoint, 'matchvotesnum')
+    auth = oss2.Auth('xxx', 'xxx')
+    bucket = oss2.Bucket(auth, endpoint, 'xxxx')
 
     run(file_dic)
     db.close()
